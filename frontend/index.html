@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hive</title>
+    <!-- Use Outfit and Inter for a modern, minimal typography mix -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Feather Icons for clean minimal iconography -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- New App Navigation -->
+        <nav class="app-nav">
+            <div class="nav-brand animated-hive" style="height: 70px; display: flex; align-items: center; justify-content: center;">
+                <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <path class="hex hex-1" d="M20,4 L27,8 L27,16 L20,20 L13,16 L13,8 Z" />
+                    <path class="hex hex-2" d="M13,16 L20,20 L20,28 L13,32 L6,28 L6,20 Z" />
+                    <path class="hex hex-3" d="M27,16 L34,20 L34,28 L27,32 L20,28 L20,20 Z" />
+                    
+                    <!-- Orbiting Bee -->
+                    <circle class="bee" cx="20" cy="18" r="2" />
+                </svg>
+            </div>
+            <div class="nav-links">
+                <button id="nav-discover" class="nav-link active">
+                    <i data-feather="search"></i>
+                    <span>Discover</span>
+                </button>
+                <button id="nav-downloads" class="nav-link">
+                    <i data-feather="download-cloud"></i>
+                    <span>Downloads</span>
+                    <span id="download-badge" class="nav-badge hidden">0</span>
+                </button>
+            </div>
+            <div class="nav-footer">
+                <div class="footer-text">Powered by HF API</div>
+            </div>
+        </nav>
+
+        <!-- Main Workspace Area -->
+        <div class="workspace-area">
+            
+            <!-- VIEW 1: Discover -->
+            <div id="view-discover" class="workspace-view active">
+                <aside class="sidebar">
+                    <div class="search-box">
+                        <i data-feather="search" class="search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Search models..." autocomplete="off"/>
+                    </div>
+                    <div class="sidebar-content">
+                        <div class="loading-state hidden" id="searchLoading">
+                            <div class="spinner"></div>
+                        </div>
+                        <ul id="searchResults" class="model-list">
+                            <!-- Search results populated here -->
+                        </ul>
+                    </div>
+                </aside>
+
+                <main class="main-content">
+                    <div class="details-pane hidden" id="modelDetails">
+                        <header class="details-header">
+                            <h1 id="modelTitle">Model Name</h1>
+                            <div class="model-meta" id="modelMeta"></div>
+                        </header>
+                        <div class="files-section">
+                            <div class="section-title">
+                                <h2>Available Model Files</h2>
+                            </div>
+                            <div class="loading-state hidden" id="filesLoading">
+                                <div class="spinner"></div>
+                            </div>
+                            <ul id="fileList" class="file-list">
+                                <!-- File list populated here -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="empty-state" id="emptyState">
+                        <i data-feather="search" class="empty-icon"></i>
+                        <p>Search for a model to view details</p>
+                    </div>
+                </main>
+            </div>
+
+            <!-- VIEW 2: Downloads -->
+            <div id="view-downloads" class="workspace-view hidden">
+                <div class="downloads-page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <h1>Local Models & Downloads</h1>
+                    <div class="download-path-selector" style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-surface); padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Save Path:</span>
+                        <input type="text" id="downloadPathInput" style="background: var(--bg-base); border: 1px solid var(--border-strong); color: var(--text-primary); padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.85rem; width: 250px;" placeholder="C:\Models" autocomplete="off">
+                        <button id="btnBrowsePath" class="action-btn" title="Browse" style="background: var(--bg-base); border: 1px solid var(--border-strong); padding: 0.4rem; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-primary);">
+                            <i data-feather="folder"></i>
+                        </button>
+                        <button id="btnSavePath" class="action-btn" title="Save Path" style="background: var(--accent); border: none; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); cursor: pointer; color: white; font-weight: 500; font-size: 0.85rem;">
+                            Save
+                        </button>
+                    </div>
+                </div>
+                <div class="downloads-page-content">
+                    <div id="downloadsContainer" class="downloads-grid">
+                        <div class="empty-downloads">No local models or active downloads</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>

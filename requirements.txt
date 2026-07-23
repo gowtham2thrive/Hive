@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+huggingface_hub
+requests
+pydantic

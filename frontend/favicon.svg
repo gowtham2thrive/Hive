@@ -1,0 +1,10 @@
+<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .hex { fill: rgba(245, 158, 11, 0.2); stroke: #f59e0b; stroke-width: 1.5; stroke-linejoin: round; }
+        .bee { fill: #f59e0b; }
+    </style>
+    <path class="hex" d="M20,4 L27,8 L27,16 L20,20 L13,16 L13,8 Z" />
+    <path class="hex" d="M13,16 L20,20 L20,28 L13,32 L6,28 L6,20 Z" />
+    <path class="hex" d="M27,16 L34,20 L34,28 L27,32 L20,28 L20,20 Z" />
+    <circle class="bee" cx="32" cy="8" r="3" />
+</svg>

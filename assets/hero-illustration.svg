@@ -1,0 +1,59 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121212;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E1E1E;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFC107;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF9800;stop-opacity:1" />
+    </linearGradient>
+    <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)" rx="20"/>
+  
+  <!-- Browser Window -->
+  <rect x="100" y="50" width="600" height="300" rx="10" fill="#2D2D2D" filter="url(#drop-shadow)"/>
+  
+  <!-- Window Controls -->
+  <circle cx="120" cy="70" r="6" fill="#FF5F56"/>
+  <circle cx="140" cy="70" r="6" fill="#FFBD2E"/>
+  <circle cx="160" cy="70" r="6" fill="#27C93F"/>
+  
+  <!-- Header / Search -->
+  <rect x="200" y="60" width="400" height="20" rx="10" fill="#1A1A1A"/>
+  
+  <!-- Sidebar -->
+  <rect x="100" y="90" width="120" height="260" fill="#252525" rx="0" ry="0"/>
+  <rect x="110" y="110" width="100" height="20" rx="5" fill="#3D3D3D"/>
+  <rect x="110" y="140" width="80" height="15" rx="5" fill="#333333"/>
+  <rect x="110" y="165" width="90" height="15" rx="5" fill="#333333"/>
+
+  <!-- Content Area - Model Grid -->
+  <!-- Card 1 -->
+  <rect x="240" y="110" width="130" height="100" rx="8" fill="#333333"/>
+  <circle cx="270" cy="140" r="15" fill="url(#accent)"/>
+  <rect x="295" y="135" width="60" height="10" rx="5" fill="#555555"/>
+  <rect x="250" y="180" width="110" height="20" rx="4" fill="#444444"/>
+  
+  <!-- Card 2 -->
+  <rect x="390" y="110" width="130" height="100" rx="8" fill="#333333"/>
+  <circle cx="420" cy="140" r="15" fill="#4CAF50"/>
+  <rect x="445" y="135" width="60" height="10" rx="5" fill="#555555"/>
+  <rect x="400" y="180" width="110" height="20" rx="4" fill="#444444"/>
+
+  <!-- Card 3 -->
+  <rect x="540" y="110" width="130" height="100" rx="8" fill="#333333"/>
+  <circle cx="570" cy="140" r="15" fill="#2196F3"/>
+  <rect x="595" y="135" width="60" height="10" rx="5" fill="#555555"/>
+  <rect x="550" y="180" width="110" height="20" rx="4" fill="#444444"/>
+  
+  <!-- Download Progress Bar -->
+  <rect x="240" y="230" width="430" height="60" rx="8" fill="#333333"/>
+  <rect x="260" y="245" width="150" height="10" rx="5" fill="#555555"/>
+  <rect x="260" y="265" width="300" height="8" rx="4" fill="#222222"/>
+  <rect x="260" y="265" width="180" height="8" rx="4" fill="url(#accent)"/>
+  <polygon points="630,250 645,250 645,265 655,265 637.5,280 620,265 630,265" fill="url(#accent)"/>
+</svg>
