@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 huggingface_hub
 requests
 pydantic

@@ -60,7 +60,7 @@
    *This script will automatically:*
    - Set up a Python virtual environment (`venv`).
    - Install the required dependencies (`FastAPI`, `Uvicorn`, `huggingface_hub`, `requests`).
-   - Start the backend server on port `8000`.
+   - Start the backend server on port `8080`.
    - Open the app in your default web browser.
 
 ---
