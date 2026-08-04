@@ -1,10 +1,58 @@
-<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-    <style>
-        .hex { fill: rgba(245, 158, 11, 0.2); stroke: #f59e0b; stroke-width: 1.5; stroke-linejoin: round; }
-        .bee { fill: #f59e0b; }
-    </style>
-    <path class="hex" d="M20,4 L27,8 L27,16 L20,20 L13,16 L13,8 Z" />
-    <path class="hex" d="M13,16 L20,20 L20,28 L13,32 L6,28 L6,20 Z" />
-    <path class="hex" d="M27,16 L34,20 L34,28 L27,32 L20,28 L20,20 Z" />
-    <circle class="bee" cx="32" cy="8" r="3" />
+<svg width="100%" height="100%" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .hex {
+      fill: rgba(245, 158, 11, 0.1);
+      stroke: #f59e0b;
+      stroke-width: 1.5;
+      stroke-linejoin: round;
+    }
+    .hex-1 {
+      animation: pulseHex 4s infinite ease-in-out;
+    }
+    .hex-2 {
+      animation: pulseHex 4s infinite ease-in-out 1.33s;
+    }
+    .hex-3 {
+      animation: pulseHex 4s infinite ease-in-out 2.66s;
+    }
+
+    @keyframes pulseHex {
+      0%, 100% {
+        fill: rgba(245, 158, 11, 0.1);
+        stroke: #f59e0b;
+        stroke-width: 1.5;
+      }
+      50% {
+        fill: rgba(245, 158, 11, 0.5);
+        stroke: #fbbf24;
+        stroke-width: 2.2;
+      }
+    }
+
+    .bee {
+      fill: #f59e0b;
+      filter: drop-shadow(0 0 3px #f59e0b);
+      transform-origin: 20px 18px;
+      animation: flyBee 5s linear infinite;
+    }
+
+    @keyframes flyBee {
+      0% {
+        transform: rotate(0deg) translateX(16px);
+      }
+      100% {
+        transform: rotate(360deg) translateX(16px);
+      }
+    }
+  </style>
+
+  <g filter="drop-shadow(0 0 4px rgba(245, 158, 11, 0.4))">
+    <!-- Honeycomb Hexagons -->
+    <path class="hex hex-1" d="M20,4 L27,8 L27,16 L20,20 L13,16 L13,8 Z" />
+    <path class="hex hex-2" d="M13,16 L20,20 L20,28 L13,32 L6,28 L6,20 Z" />
+    <path class="hex hex-3" d="M27,16 L34,20 L34,28 L27,32 L20,28 L20,20 Z" />
+
+    <!-- Orbiting Bee -->
+    <circle class="bee" cx="20" cy="18" r="2.2" />
+  </g>
 </svg>

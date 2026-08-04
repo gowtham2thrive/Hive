@@ -3,3 +3,6 @@ uvicorn[standard]
 huggingface_hub
 requests
 pydantic
+llama-cpp-python
+aiosqlite
+psutil

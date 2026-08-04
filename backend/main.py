@@ -7,16 +7,34 @@ import logging
 import platform
 import threading
 import subprocess
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from huggingface_hub import HfApi
 from pydantic import BaseModel
 from backend.downloader import download_model_file, get_active_downloads, cancel_download, pause_download, sync_local_files, delete_local_file, clear_local_completed_files, dismiss_download
+from backend.chat_database import init_db, close_db
+from backend.chat_routes import router as chat_router
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup / shutdown lifecycle for Hive."""
+    # Startup
+    await init_db()
+    print("[Hive] Chat database initialized.")
+    yield
+    # Shutdown
+    from backend.chat_model_manager import chat_model_manager
+    chat_model_manager.unload_model()
+    await close_db()
+    print("[Hive] Chat model unloaded. Database closed.")
+
+
+app = FastAPI(lifespan=lifespan)
 
 # Allow CORS for development
 app.add_middleware(
@@ -270,6 +288,9 @@ async def websocket_endpoint(websocket: WebSocket):
         print("Client disconnected")
     except Exception as e:
         print(f"WebSocket error: {e}")
+
+# Register chat routes (conversations, model management, WebSocket chat)
+app.include_router(chat_router)
 
 # Mount frontend static files last so API routes are matched first
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
