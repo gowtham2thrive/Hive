@@ -1,0 +1,42 @@
+<svg width="390" height="160" viewBox="0 0 390 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.08)" />
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0.02)" />
+    </linearGradient>
+    <style>
+      .name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 600; fill: #ffffff; }
+      .stat-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; }
+      .stat-value { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #ffffff; }
+      .stat-added { fill: #10b981; }
+      .stat-deleted { fill: #ef4444; }
+    </style>
+  </defs>
+  
+  <rect width="100%" height="100%" fill="transparent" />
+  
+  <g transform="translate(10, 10)">
+    <rect width="370" height="140" rx="16" fill="url(#cardBg)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+    
+    <defs>
+      <clipPath id="clip-preethi-beri">
+        <circle cx="48" cy="44" r="24" />
+      </clipPath>
+    </defs>
+    <circle cx="48" cy="44" r="26" fill="rgba(245, 158, 11, 0.15)" stroke="#f59e0b" stroke-width="2" />
+    <image x="24" y="20" width="48" height="48" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-preethi-beri)" xlink:href="data:image/jpeg;base64,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" />
+    
+    <text x="88" y="50" class="name">preethi-beri</text>
+    
+    <line x1="24" y1="84" x2="346" y2="84" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1" />
+    
+    <text x="24" y="106" class="stat-label">Commits</text>
+    <text x="24" y="126" class="stat-value">1</text>
+    
+    <text x="140" y="106" class="stat-label">Added</text>
+    <text x="140" y="126" class="stat-value stat-added">++12</text>
+    
+    <text x="250" y="106" class="stat-label">Deleted</text>
+    <text x="250" y="126" class="stat-value stat-deleted">--4</text>
+  </g>
+</svg>

@@ -1,59 +1,158 @@
-<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" viewBox="50 40 700 480" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes userMsg {
+      0%, 10% { opacity: 0; transform: translateY(15px); }
+      15%, 85% { opacity: 1; transform: translateY(0); }
+      90%, 100% { opacity: 0; transform: translateY(-10px); }
+    }
+    @keyframes aiAvatar {
+      0%, 25% { opacity: 0; transform: scale(0.5); }
+      30%, 85% { opacity: 1; transform: scale(1); }
+      90%, 100% { opacity: 0; transform: scale(0.5); }
+    }
+    @keyframes aiBox {
+      0%, 30% { opacity: 0; transform: translateY(15px); }
+      35%, 85% { opacity: 1; transform: translateY(0); }
+      90%, 100% { opacity: 0; transform: translateY(-10px); }
+    }
+    @keyframes aiLine1 {
+      0%, 35% { opacity: 0; transform: translateX(-10px); }
+      40%, 85% { opacity: 1; transform: translateX(0); }
+      90%, 100% { opacity: 0; transform: translateX(-10px); }
+    }
+    @keyframes aiLine2 {
+      0%, 40% { opacity: 0; transform: translateX(-10px); }
+      45%, 85% { opacity: 1; transform: translateX(0); }
+      90%, 100% { opacity: 0; transform: translateX(-10px); }
+    }
+    @keyframes aiLine3 {
+      0%, 45% { opacity: 0; transform: translateX(-10px); }
+      50%, 85% { opacity: 1; transform: translateX(0); }
+      90%, 100% { opacity: 0; transform: translateX(-10px); }
+    }
+    @keyframes btnPress {
+      0%, 8% { transform: scale(1); }
+      10% { transform: scale(0.85); }
+      12%, 100% { transform: scale(1); }
+    }
+    
+    .anim-user { animation: userMsg 8s ease-out infinite; opacity: 0; }
+    .anim-avatar { animation: aiAvatar 8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; opacity: 0; transform-origin: 300px 210px; }
+    .anim-box { animation: aiBox 8s ease-out infinite; opacity: 0; }
+    .anim-l1 { animation: aiLine1 8s ease-out infinite; opacity: 0; }
+    .anim-l2 { animation: aiLine2 8s ease-out infinite; opacity: 0; }
+    .anim-l3 { animation: aiLine3 8s ease-out infinite; opacity: 0; }
+    .anim-btn { animation: btnPress 8s infinite; transform-origin: 645px 317px; }
+    
+    /* Theme Adjustments */
+    .app-window { filter: url(#glass-light); }
+    .glow-pool { opacity: 0; }
+    @media (prefers-color-scheme: dark) {
+      .app-window { filter: url(#glass-dark); }
+      .glow-pool { opacity: 1; }
+    }
+  </style>
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#121212;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1E1E1E;stop-opacity:1" />
+    <!-- Premium Ambient Glow -->
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(245, 158, 11, 0.25)" />
+      <stop offset="40%" stop-color="rgba(245, 158, 11, 0.1)" />
+      <stop offset="100%" stop-color="rgba(245, 158, 11, 0)" />
+    </radialGradient>
+    
+    <linearGradient id="amber-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d" />
+      <stop offset="100%" stop-color="#f59e0b" />
     </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFC107;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#FF9800;stop-opacity:1" />
-    </linearGradient>
-    <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/>
+
+    <!-- Deep Premium Shadow (Dark Theme) -->
+    <filter id="glass-dark" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="20" stdDeviation="35" flood-color="#000" flood-opacity="0.8"/>
+    </filter>
+    <!-- Soft Premium Shadow (Light Theme) -->
+    <filter id="glass-light" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="20" stdDeviation="35" flood-color="#000" flood-opacity="0.15"/>
     </filter>
   </defs>
-  <rect width="800" height="400" fill="url(#bg)" rx="20"/>
-  
-  <!-- Browser Window -->
-  <rect x="100" y="50" width="600" height="300" rx="10" fill="#2D2D2D" filter="url(#drop-shadow)"/>
-  
-  <!-- Window Controls -->
-  <circle cx="120" cy="70" r="6" fill="#FF5F56"/>
-  <circle cx="140" cy="70" r="6" fill="#FFBD2E"/>
-  <circle cx="160" cy="70" r="6" fill="#27C93F"/>
-  
-  <!-- Header / Search -->
-  <rect x="200" y="60" width="400" height="20" rx="10" fill="#1A1A1A"/>
-  
-  <!-- Sidebar -->
-  <rect x="100" y="90" width="120" height="260" fill="#252525" rx="0" ry="0"/>
-  <rect x="110" y="110" width="100" height="20" rx="5" fill="#3D3D3D"/>
-  <rect x="110" y="140" width="80" height="15" rx="5" fill="#333333"/>
-  <rect x="110" y="165" width="90" height="15" rx="5" fill="#333333"/>
 
-  <!-- Content Area - Model Grid -->
-  <!-- Card 1 -->
-  <rect x="240" y="110" width="130" height="100" rx="8" fill="#333333"/>
-  <circle cx="270" cy="140" r="15" fill="url(#accent)"/>
-  <rect x="295" y="135" width="60" height="10" rx="5" fill="#555555"/>
-  <rect x="250" y="180" width="110" height="20" rx="4" fill="#444444"/>
+  <!-- Transparent Background perfectly blending with any theme -->
+  <rect width="100%" height="100%" fill="transparent" />
   
-  <!-- Card 2 -->
-  <rect x="390" y="110" width="130" height="100" rx="8" fill="#333333"/>
-  <circle cx="420" cy="140" r="15" fill="#4CAF50"/>
-  <rect x="445" y="135" width="60" height="10" rx="5" fill="#555555"/>
-  <rect x="400" y="180" width="110" height="20" rx="4" fill="#444444"/>
+  <!-- Shift content down to prevent glow cutoff -->
+  <g transform="translate(0, 80)">
+    <!-- Organic Elliptical Light Pool behind the app -->
+    <ellipse cx="400" cy="200" rx="350" ry="180" fill="url(#glow)" class="glow-pool" />
+    
+    <!-- App Window (Glassmorphism) -->
+    <rect x="100" y="50" width="600" height="300" rx="12" fill="#18181b" stroke="rgba(255,255,255,0.08)" class="app-window" />
+    
+    <!-- Sidebar -->
+    <path d="M260 50 v300 h-148 a12 12 0 0 1 -12 -12 v-276 a12 12 0 0 1 12 -12 z" fill="#09090b" />
+    <line x1="260" y1="50" x2="260" y2="350" stroke="rgba(255,255,255,0.05)" />
+    
+    <!-- macOS window controls -->
+    <circle cx="125" cy="70" r="5" fill="#3f3f46" />
+    <circle cx="145" cy="70" r="5" fill="#3f3f46" />
+    <circle cx="165" cy="70" r="5" fill="#3f3f46" />
 
-  <!-- Card 3 -->
-  <rect x="540" y="110" width="130" height="100" rx="8" fill="#333333"/>
-  <circle cx="570" cy="140" r="15" fill="#2196F3"/>
-  <rect x="595" y="135" width="60" height="10" rx="5" fill="#555555"/>
-  <rect x="550" y="180" width="110" height="20" rx="4" fill="#444444"/>
-  
-  <!-- Download Progress Bar -->
-  <rect x="240" y="230" width="430" height="60" rx="8" fill="#333333"/>
-  <rect x="260" y="245" width="150" height="10" rx="5" fill="#555555"/>
-  <rect x="260" y="265" width="300" height="8" rx="4" fill="#222222"/>
-  <rect x="260" y="265" width="180" height="8" rx="4" fill="url(#accent)"/>
-  <polygon points="630,250 645,250 645,265 655,265 637.5,280 620,265 630,265" fill="url(#accent)"/>
+    <!-- Sidebar Hive Logo -->
+    <g transform="translate(120, 100)">
+      <polygon points="12,0 24,7 24,21 12,28 0,21 0,7" fill="url(#amber-gradient)" />
+      <polygon points="12,4 20,9 20,19 12,24 4,19 4,9" fill="#09090b" />
+      <circle cx="12" cy="14" r="4" fill="#f59e0b" />
+    </g>
+    <rect x="155" y="112" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+
+    <!-- Sidebar Navigation Items -->
+    <rect x="115" y="150" width="130" height="32" rx="6" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.2)" />
+    <circle cx="132" cy="166" r="6" fill="#f59e0b" />
+    <rect x="148" y="164" width="70" height="4" rx="2" fill="#f59e0b" />
+    
+    <circle cx="132" cy="206" r="6" fill="#3f3f46" />
+    <rect x="148" y="204" width="50" height="4" rx="2" fill="#71717a" />
+
+    <circle cx="132" cy="246" r="6" fill="#3f3f46" />
+    <rect x="148" y="244" width="80" height="4" rx="2" fill="#71717a" />
+
+    <!-- Main Content Area - Chat Interface Mockup -->
+    <!-- Header -->
+    <rect x="260" y="50" width="440" height="50" fill="rgba(255,255,255,0.02)" />
+    <line x1="260" y1="100" x2="700" y2="100" stroke="rgba(255,255,255,0.05)" />
+    <rect x="290" y="73" width="140" height="5" rx="2.5" fill="#e4e4e7" />
+    
+    <rect x="630" y="65" width="40" height="20" rx="4" fill="#27272a" />
+    <circle cx="650" cy="75" r="3" fill="#a1a1aa" />
+
+    <!-- Chat Messages -->
+    <!-- User Message (Sent from right) -->
+    <g class="anim-user">
+      <rect x="520" y="130" width="150" height="40" rx="10" fill="url(#amber-gradient)" />
+      <rect x="540" y="148" width="110" height="4" rx="2" fill="#fff" opacity="0.9" />
+    </g>
+    
+    <!-- AI Message (Received on left) -->
+    <g class="anim-avatar">
+      <circle cx="300" cy="210" r="16" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="1.5" />
+      <!-- Small Hexagon for AI Avatar -->
+      <polygon points="300,202 307,206 307,214 300,218 293,214 293,206" fill="#f59e0b" />
+    </g>
+    
+    <g class="anim-box">
+      <rect x="330" y="190" width="340" height="80" rx="10" fill="#27272a" stroke="rgba(255,255,255,0.05)" />
+      <rect class="anim-l1" x="350" y="210" width="300" height="4" rx="2" fill="#d4d4d8" />
+      <rect class="anim-l2" x="350" y="225" width="260" height="4" rx="2" fill="#d4d4d8" />
+      <rect class="anim-l3" x="350" y="240" width="180" height="4" rx="2" fill="#d4d4d8" />
+    </g>
+
+    <!-- Input Bar at Bottom -->
+    <rect x="290" y="300" width="380" height="34" rx="17" fill="#09090b" stroke="rgba(255,255,255,0.1)" />
+    <rect x="310" y="315" width="120" height="4" rx="2" fill="#52525b" />
+    
+    <!-- Send Button -->
+    <g class="anim-btn">
+      <circle cx="645" cy="317" r="12" fill="#f59e0b" />
+      <!-- Arrow inside send button -->
+      <path d="M642 312 L648 317 L642 322" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </svg>

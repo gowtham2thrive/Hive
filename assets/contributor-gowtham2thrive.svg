@@ -1,0 +1,42 @@
+<svg width="390" height="160" viewBox="0 0 390 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.08)" />
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0.02)" />
+    </linearGradient>
+    <style>
+      .name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 600; fill: #ffffff; }
+      .stat-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; }
+      .stat-value { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #ffffff; }
+      .stat-added { fill: #10b981; }
+      .stat-deleted { fill: #ef4444; }
+    </style>
+  </defs>
+  
+  <rect width="100%" height="100%" fill="transparent" />
+  
+  <g transform="translate(10, 10)">
+    <rect width="370" height="140" rx="16" fill="url(#cardBg)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+    
+    <defs>
+      <clipPath id="clip-gowtham2thrive">
+        <circle cx="48" cy="44" r="24" />
+      </clipPath>
+    </defs>
+    <circle cx="48" cy="44" r="26" fill="rgba(245, 158, 11, 0.15)" stroke="#f59e0b" stroke-width="2" />
+    <image x="24" y="20" width="48" height="48" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-gowtham2thrive)" xlink:href="data:image/jpeg;base64,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" />
+    
+    <text x="88" y="50" class="name">gowtham2thrive</text>
+    
+    <line x1="24" y1="84" x2="346" y2="84" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1" />
+    
+    <text x="24" y="106" class="stat-label">Commits</text>
+    <text x="24" y="126" class="stat-value">5</text>
+    
+    <text x="140" y="106" class="stat-label">Added</text>
+    <text x="140" y="126" class="stat-value stat-added">++6.9K</text>
+    
+    <text x="250" y="106" class="stat-label">Deleted</text>
+    <text x="250" y="126" class="stat-value stat-deleted">--636</text>
+  </g>
+</svg>

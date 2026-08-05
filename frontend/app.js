@@ -1181,23 +1181,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function chatShowWelcome() {
         chatDom.messagesContainer.innerHTML = `
             <div class="chat-welcome-screen">
-                <div class="chat-welcome-icon">⬡</div>
-                <h1 class="chat-welcome-title">Hive Chat</h1>
-                <p class="chat-welcome-subtitle">Chat with your local GGUF models. Load a model from settings and start a conversation — everything runs on your machine.</p>
-                <div class="chat-welcome-tips">
-                    <div class="chat-tip-card" onclick="document.getElementById('chatMessageInput').value='Explain quantum computing in simple terms'; document.getElementById('chatMessageInput').focus();">
-                        <div class="chat-tip-card-icon">💡</div>
-                        <div class="chat-tip-card-text">Explain quantum computing in simple terms</div>
-                    </div>
-                    <div class="chat-tip-card" onclick="document.getElementById('chatMessageInput').value='Write a Python function to sort a list'; document.getElementById('chatMessageInput').focus();">
-                        <div class="chat-tip-card-icon">🐍</div>
-                        <div class="chat-tip-card-text">Write a Python function to sort a list</div>
-                    </div>
-                    <div class="chat-tip-card" onclick="document.getElementById('chatMessageInput').value='What are the best practices for REST API design?'; document.getElementById('chatMessageInput').focus();">
-                        <div class="chat-tip-card-icon">🌐</div>
-                        <div class="chat-tip-card-text">Best practices for REST API design</div>
-                    </div>
+                <div class="animated-hive" style="margin-bottom: 2rem;">
+                    <svg width="60" height="60" viewBox="-4 -6 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path class="hex hex-1" d="M20,4 L27,8 L27,16 L20,20 L13,16 L13,8 Z" />
+                        <path class="hex hex-2" d="M13,16 L20,20 L20,28 L13,32 L6,28 L6,20 Z" />
+                        <path class="hex hex-3" d="M27,16 L34,20 L34,28 L27,32 L20,28 L20,20 Z" />
+                        <circle class="bee" cx="20" cy="18" r="2" />
+                    </svg>
                 </div>
+                <h1 class="chat-welcome-title" style="font-weight: 400; color: var(--text-secondary);">How can I help you today?</h1>
             </div>
         `;
     }
