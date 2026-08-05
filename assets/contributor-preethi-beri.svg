@@ -1,22 +1,43 @@
 <svg width="390" height="160" viewBox="0 0 390 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-    <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Dark Theme Background (Original) -->
+    <linearGradient id="cardBgDark" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="rgba(255, 255, 255, 0.08)" />
       <stop offset="100%" stop-color="rgba(255, 255, 255, 0.02)" />
     </linearGradient>
+    
+    <!-- Light Theme Background -->
+    <linearGradient id="cardBgLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+
     <style>
-      .name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 600; fill: #ffffff; }
-      .stat-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; }
-      .stat-value { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #ffffff; }
+      .name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 600; fill: #1e293b; }
+      .stat-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+      .stat-value { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
       .stat-added { fill: #10b981; }
       .stat-deleted { fill: #ef4444; }
+      
+      .card-bg { fill: url(#cardBgLight); stroke: #e2e8f0; }
+      .card-line { stroke: #e2e8f0; }
+      
+      @media (prefers-color-scheme: dark) {
+        .name { fill: #ffffff; }
+        .stat-label { fill: #a1a1aa; }
+        .stat-value { fill: #ffffff; }
+        .stat-added { fill: #10b981; }
+        .stat-deleted { fill: #ef4444; }
+        .card-bg { fill: url(#cardBgDark); stroke: rgba(255, 255, 255, 0.1); }
+        .card-line { stroke: rgba(255, 255, 255, 0.06); }
+      }
     </style>
   </defs>
   
   <rect width="100%" height="100%" fill="transparent" />
   
   <g transform="translate(10, 10)">
-    <rect width="370" height="140" rx="16" fill="url(#cardBg)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+    <rect width="370" height="140" rx="16" stroke-width="1" class="card-bg" />
     
     <defs>
       <clipPath id="clip-preethi-beri">
@@ -28,7 +49,7 @@
     
     <text x="88" y="50" class="name">preethi-beri</text>
     
-    <line x1="24" y1="84" x2="346" y2="84" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1" />
+    <line x1="24" y1="84" x2="346" y2="84" stroke-width="1" class="card-line" />
     
     <text x="24" y="106" class="stat-label">Commits</text>
     <text x="24" y="126" class="stat-value">1</text>
