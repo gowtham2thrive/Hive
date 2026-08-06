@@ -33,6 +33,7 @@
 - <a href="#"><img src="assets/icon-downloads.svg" width="20" align="center"></a> **Downloads Workspace**: Manage your active downloads and view locally downloaded models in a beautiful grid layout.
 - <a href="#"><img src="assets/icon-chat.svg" width="20" align="center"></a> **Chat Workspace**: Seamlessly converse with your locally downloaded GGUF models using a beautiful, built-in chat interface with Markdown support.
 - <a href="#"><img src="assets/icon-brain.svg" width="20" align="center"></a> **Local Inference**: Run AI models completely locally with complete privacy, leveraging `llama-cpp-python`.
+- <a href="#"><img src="assets/icon-gpu.svg" width="20" align="center"></a> **Zero-Config GPU Acceleration**: Auto-detects and compiles for NVIDIA (CUDA), Apple Silicon (Metal), Intel (SYCL/Vulkan), and AMD (ROCm).
 - <a href="#"><img src="assets/icon-robust.svg" width="20" align="center"></a> **Robust Downloading**: Reliable downloading mechanism that uses chunks and supports pausing, resuming, and safe cancellation.
 - <a href="#"><img src="assets/icon-folder.svg" width="20" align="center"></a> **Native OS Integration**: Instantly open the containing folder of any downloaded model in your native file explorer (Windows).
 - <a href="#"><img src="assets/icon-ui.svg" width="20" align="center"></a> **Beautiful Glassmorphism UI**: A dark-mode, minimalist interface designed for speed, aesthetics, and premium user experience.
@@ -109,6 +110,26 @@ Hive Chat lets you have conversations with your locally downloaded GGUF models �
 - **Creativity slider** — Adjustable temperature from Precise (0.0) to Creative (2.0) with dynamic labels
 - **Auto-scroll** — Smart scrolling that pauses when you scroll up to read
 - **Inactivity watchdog** — Auto-resets if no tokens arrive for 20 seconds
+
+---
+
+## <a href="#"><img src="assets/icon-gpu.svg" width="26" align="center"></a> GPU Acceleration
+
+Hive features an advanced, zero-configuration GPU detection and optimization system. Upon the first launch, `start.bat` will probe your hardware and automatically install the optimal backend for `llama-cpp-python`.
+
+### Prerequisites for Optimal GPU Support
+
+Depending on your hardware, you may need to install standard drivers or toolkits to unlock full GPU offloading. Hive will attempt to build and run regardless, falling back to CPU mode if necessary.
+
+| Platform / GPU | What to Install | Backend Used |
+| --- | --- | --- |
+| **NVIDIA** (RTX, GTX) | **[CUDA Toolkit 12.x or 11.x](https://developer.nvidia.com/cuda-downloads)** | `cuda` (Pre-built wheel) |
+| **Apple Silicon** (M1/M2/M3) | **Xcode Command Line Tools** (`xcode-select --install`) | `metal` (Pre-built wheel) |
+| **Intel Arc / iGPU** | **[Intel oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html)** | `sycl` (Source build) |
+| **AMD Radeon** | **[ROCm SDK](https://rocm.docs.amd.com/)** | `rocm` (Source build) |
+| **Generic / Cross-platform** | **[Vulkan SDK](https://vulkan.lunarg.com/)** + **CMake** | `vulkan` (Source build) |
+
+If you update your drivers or install a new toolkit, you can trigger a re-detection directly from the **Settings** panel in the Chat interface by clicking **Rebuild GPU Backend**, or by deleting the `.gpu_backend` file in the project root.
 
 ---
 

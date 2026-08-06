@@ -218,6 +218,25 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- System Info -->
+                        <div class="chat-settings-section">
+                            <div class="chat-settings-section-title">System</div>
+                            <div class="chat-system-info" id="chatSystemInfo">
+                                <div class="chat-system-loading">Detecting hardware…</div>
+                            </div>
+                            <div id="chatSystemWarning" class="chat-system-warning" style="display: none;"></div>
+                            <div class="chat-system-actions" id="chatSystemActions" style="display: none;">
+                                <button id="chatRebuildGPUBtn" class="chat-rebuild-btn">
+                                    <i data-feather="refresh-cw" style="width:14px;height:14px;"></i>
+                                    Rebuild GPU Backend
+                                </button>
+                                <button id="chatRedetectBtn" class="chat-redetect-btn">
+                                    <i data-feather="search" style="width:14px;height:14px;"></i>
+                                    Re-detect Hardware
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </aside>
             </div>

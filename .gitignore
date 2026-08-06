@@ -8,3 +8,6 @@ config.json
 *.db
 *.db-shm
 *.db-wal
+.gpu_backend
+.build_tools/
+build_log.txt

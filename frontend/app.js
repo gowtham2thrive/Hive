@@ -50,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
             requestAnimationFrame(() => viewChat.classList.add("active"));
             // Initialize chat on first switch
             if (!chatInitialized) initChat();
+            // Refresh model list each time Chat tab is opened
+            // so models downloaded in Downloads tab appear immediately.
+            else chatRefreshModelList();
         }
     }
 
@@ -699,6 +702,12 @@ document.addEventListener("DOMContentLoaded", () => {
         temperatureValue: null,
         toast: null,
         modelBadge: null,
+        // System section DOM refs
+        systemInfo: null,
+        systemWarning: null,
+        systemActions: null,
+        rebuildBtn: null,
+        redetectBtn: null,
     };
 
     function initChat() {
@@ -728,6 +737,11 @@ document.addEventListener("DOMContentLoaded", () => {
         chatDom.temperatureValue = document.getElementById('chatTemperatureValue');
         chatDom.toast = document.getElementById('chatToast');
         chatDom.modelBadge = document.getElementById('chatModelBadge');
+        chatDom.systemInfo = document.getElementById('chatSystemInfo');
+        chatDom.systemWarning = document.getElementById('chatSystemWarning');
+        chatDom.systemActions = document.getElementById('chatSystemActions');
+        chatDom.rebuildBtn = document.getElementById('chatRebuildGPUBtn');
+        chatDom.redetectBtn = document.getElementById('chatRedetectBtn');
 
         // Wire up events
         chatDom.sendBtn.addEventListener('click', chatSendMessage);
@@ -759,6 +773,8 @@ document.addEventListener("DOMContentLoaded", () => {
         chatDom.loadBtn.addEventListener('click', chatLoadModel);
         chatDom.unloadBtn.addEventListener('click', chatUnloadModel);
         chatDom.browseBtn.addEventListener('click', chatBrowseFile);
+        if (chatDom.rebuildBtn) chatDom.rebuildBtn.addEventListener('click', chatRebuildGPU);
+        if (chatDom.redetectBtn) chatDom.redetectBtn.addEventListener('click', chatRedetectHardware);
         chatDom.searchInput.addEventListener('input', (e) => chatRenderConversationList(e.target.value));
 
         // Textarea auto-resize + keyboard shortcuts
@@ -790,6 +806,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chatLoadConversations();
         chatCheckModelStatus();
         chatRefreshModelList();
+        chatLoadHardwareInfo();
     }
 
     // ── Chat WebSocket ────────────────────────────────────────────────
@@ -1318,13 +1335,30 @@ document.addEventListener("DOMContentLoaded", () => {
     function chatUpdateModelUI(info) {
         if (info.loaded) {
             chatDom.modelDot.classList.add('loaded');
-            chatDom.modelText.textContent = info.filename || 'Model loaded';
+            // Show backend in sidebar badge
+            const backendLabel = _gpuBackendLabel(info.gpu_backend);
+            chatDom.modelText.textContent = `${info.filename || 'Model loaded'} (${backendLabel})`;
+
+            // GPU layers display
+            let gpuLayersText = '—';
+            if (info.n_gpu_layers === -1) gpuLayersText = 'All layers';
+            else if (info.n_gpu_layers === 0) gpuLayersText = 'CPU only';
+            else gpuLayersText = `${info.n_gpu_layers} layers`;
+
+            const checkMark = '<span style="color:var(--success, #10b981)">✓</span>';
+            const crossMark = '<span style="color:#52525b">✗</span>';
+
             chatDom.modelInfoCard.innerHTML = `
                 <div class="chat-model-info-row"><span class="label">Model</span><span class="value">${MarkdownRenderer.escapeHtml(info.filename)}</span></div>
                 <div class="chat-model-info-row"><span class="label">Size</span><span class="value">${info.size_mb} MB</span></div>
                 <div class="chat-model-info-row"><span class="label">Context</span><span class="value">${info.n_ctx} tokens</span></div>
+                <div class="chat-model-info-row"><span class="label">GPU Backend</span><span class="value">${backendLabel}</span></div>
+                <div class="chat-model-info-row"><span class="label">GPU Layers</span><span class="value">${gpuLayersText}</span></div>
                 <div class="chat-model-info-row"><span class="label">Threads</span><span class="value">${info.n_threads || '—'}</span></div>
                 <div class="chat-model-info-row"><span class="label">Batch</span><span class="value">${info.n_batch || '—'}</span></div>
+                <div class="chat-model-info-row"><span class="label">Flash Attn</span><span class="value">${info.flash_attn ? checkMark : crossMark}</span></div>
+                <div class="chat-model-info-row"><span class="label">Memory Map</span><span class="value">${info.use_mmap ? checkMark : crossMark}</span></div>
+                <div class="chat-model-info-row"><span class="label">Memory Lock</span><span class="value">${info.use_mlock ? checkMark : crossMark}</span></div>
                 <div class="chat-model-info-row"><span class="label">Load time</span><span class="value">${info.load_time_sec}s</span></div>
             `;
             chatDom.modelInfoCard.style.display = 'block';
@@ -1341,6 +1375,18 @@ document.addEventListener("DOMContentLoaded", () => {
             chatDom.messageInput.placeholder = 'Load a model in settings to chat...';
             chatDom.sendBtn.disabled = true;
         }
+    }
+
+    function _gpuBackendLabel(backend) {
+        const labels = {
+            cuda: 'CUDA',
+            metal: 'Metal',
+            sycl: 'SYCL',
+            rocm: 'ROCm',
+            vulkan: 'Vulkan',
+            none: 'CPU',
+        };
+        return labels[backend] || (backend || 'CPU').toUpperCase();
     }
 
     async function chatRefreshModelList() {
@@ -1423,6 +1469,111 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             chatShowToast('File picker failed', 'error');
         }
+    }
+
+    // ── Chat Hardware Info ─────────────────────────────────────────────
+
+    async function chatLoadHardwareInfo(force = false) {
+        try {
+            const url = force ? '/api/chat/hardware?force=true' : '/api/chat/hardware';
+            const res = await fetch(url);
+            const hw = await res.json();
+            if (!chatDom.systemInfo) return;
+
+            const backendLabel = _gpuBackendLabel(hw.gpu_backend);
+
+            // Determine GPU badge status class
+            let badgeClass = 'cpu';
+            if (hw.backend_mismatch) badgeClass = 'mismatch';
+            else if (hw.gpu_backend && hw.gpu_backend !== 'none') badgeClass = 'active';
+
+            let vramText = '—';
+            if (hw.vram_total_mb > 0) {
+                vramText = `${hw.vram_free_mb} / ${hw.vram_total_mb} MB`;
+            }
+
+            chatDom.systemInfo.innerHTML = `
+                <div class="chat-system-row">
+                    <span class="label">GPU</span>
+                    <span class="value">
+                        <span class="chat-gpu-badge ${badgeClass}">
+                            <span class="gpu-dot"></span>
+                            ${MarkdownRenderer.escapeHtml(hw.gpu_name || 'None')}
+                        </span>
+                    </span>
+                </div>
+                ${hw.vram_total_mb > 0 ? `<div class="chat-system-row"><span class="label">VRAM</span><span class="value">${vramText}</span></div>` : ''}
+                <div class="chat-system-row"><span class="label">Backend</span><span class="value">${backendLabel}</span></div>
+                ${hw.cuda_driver_version ? `<div class="chat-system-row"><span class="label">CUDA Driver</span><span class="value">${hw.cuda_driver_version}</span></div>` : ''}
+                <div class="chat-system-row"><span class="label">CPU Cores</span><span class="value">${hw.cpu_physical_cores} physical / ${hw.cpu_total_cores} total</span></div>
+                <div class="chat-system-row"><span class="label">RAM</span><span class="value">${Math.round(hw.ram_available_mb / 1024 * 10) / 10} / ${Math.round(hw.ram_total_mb / 1024 * 10) / 10} GB</span></div>
+                ${hw.multi_gpu ? `<div class="chat-system-row"><span class="label">Multi-GPU</span><span class="value">${hw.all_gpus.length} GPUs detected</span></div>` : ''}
+            `;
+
+            // Backend mismatch warning
+            if (hw.backend_mismatch && chatDom.systemWarning) {
+                chatDom.systemWarning.textContent = hw.backend_mismatch_msg;
+                chatDom.systemWarning.style.display = 'block';
+            } else if (chatDom.systemWarning) {
+                chatDom.systemWarning.style.display = 'none';
+            }
+
+            // Show action buttons if GPU detected but not working
+            if (chatDom.systemActions) {
+                chatDom.systemActions.style.display = (hw.backend_mismatch || hw.gpu_backend === 'none') ? 'flex' : 'none';
+            }
+
+            feather.replace();
+        } catch (err) {
+            console.error('[Hive Chat] Hardware info failed:', err);
+            if (chatDom.systemInfo) {
+                chatDom.systemInfo.innerHTML = '<div class="chat-system-loading">Hardware detection unavailable</div>';
+            }
+        }
+    }
+
+    async function chatRebuildGPU() {
+        if (!chatDom.rebuildBtn) return;
+        chatDom.rebuildBtn.disabled = true;
+        chatDom.rebuildBtn.innerHTML = '<div class="spinner" style="width:14px;height:14px;"></div> Building...';
+        chatShowToast('Rebuilding GPU backend — this may take 5-15 minutes...', 'info');
+
+        try {
+            // E6: Build takes 5-15 minutes. Use a 20-minute timeout
+            // so the browser doesn't abort the request prematurely.
+            const res = await fetch('/api/chat/gpu/rebuild', {
+                method: 'POST',
+                signal: AbortSignal.timeout(1200000),
+            });
+            const data = await res.json();
+            if (data.success) {
+                chatShowToast('GPU backend rebuilt successfully!', 'success');
+                chatLoadHardwareInfo();
+            } else {
+                chatShowToast(data.error || 'GPU rebuild failed', 'error');
+            }
+        } catch (err) {
+            chatShowToast('GPU rebuild failed — check console', 'error');
+            console.error('[Hive Chat] GPU rebuild error:', err);
+        } finally {
+            chatDom.rebuildBtn.disabled = false;
+            chatDom.rebuildBtn.innerHTML = '<i data-feather="refresh-cw" style="width:14px;height:14px;"></i> Rebuild GPU Backend';
+            feather.replace();
+        }
+    }
+
+    async function chatRedetectHardware() {
+        if (!chatDom.redetectBtn) return;
+        chatDom.redetectBtn.disabled = true;
+        chatDom.redetectBtn.innerHTML = '<div class="spinner" style="width:14px;height:14px;"></div> Detecting...';
+
+        // E1: Force re-detection, bypassing the 60-second TTL cache
+        await chatLoadHardwareInfo(true);
+        chatShowToast('Hardware re-detected', 'success');
+
+        chatDom.redetectBtn.disabled = false;
+        chatDom.redetectBtn.innerHTML = '<i data-feather="search" style="width:14px;height:14px;"></i> Re-detect Hardware';
+        feather.replace();
     }
 
     // ── Chat Toast ────────────────────────────────────────────────────

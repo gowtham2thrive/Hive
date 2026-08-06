@@ -193,6 +193,94 @@ async def pick_model_file():
         raise HTTPException(status_code=500, detail=f"File picker failed: {e}")
 
 
+# ── REST: GPU / Hardware ───────────────────────────────────────────
+
+
+@router.get("/api/chat/hardware")
+async def get_hardware_info(force: bool = False):
+    """
+    Return full hardware profile: CPU, RAM, GPU, VRAM, backend status.
+
+    Uses a 60-second TTL cache by default. Pass ?force=true from the
+    Re-detect button to bypass the cache and re-run detection.
+    """
+    try:
+        if force:
+            # Invalidate cache so get_hardware_info() re-detects
+            chat_model_manager._hardware_timestamp = 0.0
+        return await asyncio.to_thread(chat_model_manager.get_hardware_info)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Hardware detection failed: {e}")
+
+
+@router.post("/api/chat/gpu/rebuild")
+async def rebuild_gpu_backend():
+    """
+    Rebuild llama-cpp-python with Vulkan GPU support.
+    This is a long-running operation (5-15 minutes) that downloads
+    build tools if needed and compiles from source.
+    """
+    try:
+        from backend.gpu_detect import build_vulkan_llama, install_build_tools, check_build_tools
+
+        # Install build tools first if needed
+        if not check_build_tools():
+            tools_result = await asyncio.to_thread(install_build_tools)
+            if not tools_result["success"]:
+                return {
+                    "success": False,
+                    "error": f"Build tools installation failed: {', '.join(tools_result['failed'])}",
+                    "details": tools_result,
+                }
+
+        # Build with Vulkan
+        result = await asyncio.to_thread(build_vulkan_llama)
+
+        # O6: Update .gpu_backend marker so start.bat doesn't re-detect on next launch
+        if result.get("success"):
+            _update_gpu_marker("vulkan", result.get("gpu_offload", False))
+
+            # Invalidate hardware cache so next detection picks up the new library.
+            chat_model_manager._hardware_timestamp = 0.0
+
+            # Reload llama_cpp module so the running process uses the new
+            # Vulkan-backed binary instead of the stale cached CPU-only one.
+            try:
+                import importlib
+                import llama_cpp
+                importlib.reload(llama_cpp)
+            except Exception:
+                pass  # Will work correctly after server restart
+
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"GPU rebuild failed: {e}")
+
+
+def _update_gpu_marker(backend: str, gpu_offload: bool):
+    """Write the .gpu_backend marker file after a successful rebuild."""
+    try:
+        import pathlib
+        project_root = pathlib.Path(__file__).resolve().parent.parent
+        marker = project_root / ".gpu_backend"
+        marker.write_text(
+            f"[backend]\ntype={backend}\ngpu_offload={gpu_offload}\n",
+            encoding="utf-8",
+        )
+    except Exception:
+        pass  # Non-critical — worst case start.bat re-detects next launch
+
+
+@router.get("/api/chat/gpu/verify")
+async def verify_gpu_support():
+    """Check if the installed llama-cpp-python supports GPU offload."""
+    try:
+        result = await asyncio.to_thread(chat_model_manager.verify_gpu_support)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"GPU verification failed: {e}")
+
+
 # ── Context Management ─────────────────────────────────────────────
 
 

@@ -1574,6 +1574,132 @@ h1, h2 {
     opacity: 0.6;
 }
 
+/* ── System Info Section ──────────────────────────────────────── */
+
+.chat-system-info {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.chat-system-loading {
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.chat-system-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+    font-size: 0.78rem;
+}
+
+.chat-system-row .label {
+    color: var(--text-secondary);
+}
+
+.chat-system-row .value {
+    color: var(--text-primary);
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+}
+
+.chat-gpu-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+}
+
+.chat-gpu-badge .gpu-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #52525b;
+    flex-shrink: 0;
+}
+
+.chat-gpu-badge.active .gpu-dot {
+    background: var(--success, #10b981);
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+.chat-gpu-badge.mismatch .gpu-dot {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+    animation: pulse-dot 2s infinite;
+}
+
+.chat-gpu-badge.cpu .gpu-dot {
+    background: #52525b;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.chat-system-warning {
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+    line-height: 1.5;
+}
+
+.chat-system-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.chat-rebuild-btn,
+.chat-redetect-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    padding: 0.45rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.chat-rebuild-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.chat-redetect-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.chat-rebuild-btn:disabled,
+.chat-redetect-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* ── Markdown Styles ───────────────────────────────────────────── */
 
 .md-paragraph {
