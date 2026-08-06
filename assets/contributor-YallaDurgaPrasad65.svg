@@ -1,0 +1,63 @@
+<svg width="390" height="160" viewBox="0 0 390 160" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <!-- Dark Theme Background (Original) -->
+    <linearGradient id="cardBgDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.08)" />
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0.02)" />
+    </linearGradient>
+    
+    <!-- Light Theme Background -->
+    <linearGradient id="cardBgLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+
+    <style>
+      .name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 600; fill: #1e293b; }
+      .stat-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+      .stat-value { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .stat-added { fill: #10b981; }
+      .stat-deleted { fill: #ef4444; }
+      
+      .card-bg { fill: url(#cardBgLight); stroke: #e2e8f0; }
+      .card-line { stroke: #e2e8f0; }
+      
+      @media (prefers-color-scheme: dark) {
+        .name { fill: #ffffff; }
+        .stat-label { fill: #a1a1aa; }
+        .stat-value { fill: #ffffff; }
+        .stat-added { fill: #10b981; }
+        .stat-deleted { fill: #ef4444; }
+        .card-bg { fill: url(#cardBgDark); stroke: rgba(255, 255, 255, 0.1); }
+        .card-line { stroke: rgba(255, 255, 255, 0.06); }
+      }
+    </style>
+  </defs>
+  
+  <rect width="100%" height="100%" fill="transparent" />
+  
+  <g transform="translate(10, 10)">
+    <rect width="370" height="140" rx="16" stroke-width="1" class="card-bg" />
+    
+    <defs>
+      <clipPath id="clip-YallaDurgaPrasad65">
+        <circle cx="48" cy="44" r="24" />
+      </clipPath>
+    </defs>
+    <circle cx="48" cy="44" r="26" fill="rgba(245, 158, 11, 0.15)" stroke="#f59e0b" stroke-width="2" />
+    <image x="24" y="20" width="48" height="48" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-YallaDurgaPrasad65)" xlink:href="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAGkCAIAAADxLsZiAAAF10lEQVR4nOzX0c2bMABG0aZiAeaEcWBOPELfOkDaH4fccxbwJyVc2csY4xfAt/s9ewDAHcQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7ICEZfaABzvOa/YEivZtnT3hkdzsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyAhNcY456TjvO65yDgWfZtveGU5YYzvtg9PxL85dLwNs9YIEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IWGYP4IMc5zV7wv+3b+vsCXyE+2LnPwf/znf0Ns9YIEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IeI0xZm94quO8Zk+gaN/W2RMeyc0OSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsgQeyABLEDEsQOSBA7IEHsgASxAxLEDkgQOyBB7IAEsQMSxA5IEDsg4TXGmL0B4Me52QEJYgckiB2QIHZAgtgBCWIHJIgdkCB2QILYAQliBySIHZAgdkCC2AEJYgckiB2QIHZAgtgBCWIHJIgdkCB2QILYAQliBySIHZAgdkCC2AEJYgckiB2QIHZAgtgBCWIHJIgdkCB2QILYAQl/AgAA//9rfx9gzgpSLQAAAABJRU5ErkJggg==" />
+    
+    <text x="88" y="50" class="name">YallaDurgaPrasad65</text>
+    
+    <line x1="24" y1="84" x2="346" y2="84" stroke-width="1" class="card-line" />
+    
+    <text x="24" y="106" class="stat-label">Commits</text>
+    <text x="24" y="126" class="stat-value">1</text>
+    
+    <text x="140" y="106" class="stat-label">Added</text>
+    <text x="140" y="126" class="stat-value stat-added">++1</text>
+    
+    <text x="250" y="106" class="stat-label">Deleted</text>
+    <text x="250" y="126" class="stat-value stat-deleted">--1</text>
+  </g>
+</svg>
