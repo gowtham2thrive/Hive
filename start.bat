@@ -60,7 +60,7 @@ set "VPYTHON=.\venv\Scripts\python.exe"
 :: ── Step 3: Install dependencies ─────────────────────────────────
 echo   [2/3] Installing dependencies...
 %VPYTHON% -m pip install -q --upgrade pip 2>nul
-%VPYTHON% -m pip install -q -r requirements.txt 2>nul
+%VPYTHON% -m pip install -q -r requirements.txt --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu 2>nul
 if !errorlevel! neq 0 (
     echo   [WARN] Some packages may have failed. Continuing anyway...
 ) else (
