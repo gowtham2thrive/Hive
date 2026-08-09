@@ -52,12 +52,12 @@
     <line x1="24" y1="84" x2="346" y2="84" stroke-width="1" class="card-line" />
     
     <text x="24" y="106" class="stat-label">Commits</text>
-    <text x="24" y="126" class="stat-value">1</text>
+    <text x="24" y="126" class="stat-value">2</text>
     
     <text x="140" y="106" class="stat-label">Added</text>
-    <text x="140" y="126" class="stat-value stat-added">++1</text>
+    <text x="140" y="126" class="stat-value stat-added">++253</text>
     
     <text x="250" y="106" class="stat-label">Deleted</text>
-    <text x="250" y="126" class="stat-value stat-deleted">--1</text>
+    <text x="250" y="126" class="stat-value stat-deleted">--128</text>
   </g>
 </svg>
