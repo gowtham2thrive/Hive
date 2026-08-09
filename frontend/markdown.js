@@ -82,13 +82,16 @@ const MarkdownRenderer = (() => {
      * Parse a markdown table block into HTML.
      */
     function parseTable(lines) {
-        const rows = lines.filter(l => l.trim() && !l.trim().match(/^\|[\s\-:|]+\|$/));
+        const rows = lines.filter(l => l.trim() && !l.trim().match(/^\|[\s\-:|]+\|?$/));
         if (rows.length === 0) return '';
 
         let html = '<div class="md-table-wrapper"><table class="md-table">';
 
         rows.forEach((row, i) => {
-            const cells = row.split('|').slice(1, -1).map(c => c.trim());
+            let cells = row.split('|').map(c => c.trim());
+            if (cells.length > 0 && cells[0] === '') cells.shift();
+            if (cells.length > 0 && cells[cells.length - 1] === '') cells.pop();
+            
             const tag = i === 0 ? 'th' : 'td';
 
             if (i === 0) html += '<thead>';
@@ -130,7 +133,7 @@ const MarkdownRenderer = (() => {
                     codeLines.push(lines[i]);
                     i++;
                 }
-                i++; // skip closing ```
+                if (i < lines.length) i++; // skip closing ``` if present
                 const code = codeLines.join('\n');
                 const highlighted = highlightCode(code, lang);
                 htmlParts.push(
@@ -145,7 +148,7 @@ const MarkdownRenderer = (() => {
             }
 
             // ── Tables ────────────────────────────────────
-            if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+            if (trimmed.startsWith('|')) {
                 const tableLines = [];
                 while (i < lines.length && lines[i].trim().startsWith('|')) {
                     tableLines.push(lines[i]);

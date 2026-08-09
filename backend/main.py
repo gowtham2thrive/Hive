@@ -94,9 +94,11 @@ class DownloadRequest(BaseModel):
 
 class CancelRequest(BaseModel):
     filename: str
+    repo_id: str
 
 class PauseRequest(BaseModel):
     filename: str
+    repo_id: str
 
 @app.get("/api/search")
 def search_models(q: str):
@@ -153,6 +155,7 @@ def _validate_filename(filename: str):
 
 def _validate_repo_id(repo_id: str):
     """Validate that repo_id looks like a valid HuggingFace model ID."""
+    if repo_id == "local": return
     if not repo_id or not _REPO_ID_PATTERN.match(repo_id):
         raise HTTPException(status_code=400, detail="Invalid repo_id format. Expected 'owner/model-name'.")
 
@@ -162,7 +165,8 @@ def start_download(req: DownloadRequest):
     _validate_repo_id(req.repo_id)
     # Check if already downloading or completed
     active = get_active_downloads()
-    if req.filename in active and active[req.filename]["status"] in ["downloading", "starting", "completed"]:
+    composite_key = f"{req.repo_id}/{req.filename}"
+    if composite_key in active and active[composite_key]["status"] in ["downloading", "starting", "completed"]:
         return {"message": "Download already in progress or completed."}
     
     # Capture current MODELS_DIR so in-flight downloads aren't affected by path changes
@@ -184,23 +188,29 @@ def start_download(req: DownloadRequest):
 @app.post("/api/cancel")
 def handle_cancel_download(req: CancelRequest):
     _validate_filename(req.filename)
-    cancel_download(req.filename, get_models_dir())
+    _validate_repo_id(req.repo_id)
+    cancel_download(req.repo_id, req.filename, get_models_dir())
     return {"message": f"Requested cancellation for {req.filename}"}
 
 @app.post("/api/pause")
 def handle_pause_download(req: PauseRequest):
     _validate_filename(req.filename)
-    pause_download(req.filename)
+    _validate_repo_id(req.repo_id)
+    pause_download(req.repo_id, req.filename)
     return {"message": f"Requested pause for {req.filename}"}
 
 class FileActionRequest(BaseModel):
     filename: str
+    repo_id: str
 
 @app.post("/api/open_folder")
 def handle_open_folder(req: FileActionRequest):
     _validate_filename(req.filename)
+    _validate_repo_id(req.repo_id)
     models_dir = get_models_dir()
-    file_path = os.path.join(models_dir, req.filename)
+    parts = [p for p in req.repo_id.split('/') if p and p not in ('.', '..')] if req.repo_id != "local" else []
+    repo_dir = os.path.join(models_dir, *parts) if parts else models_dir
+    file_path = os.path.join(repo_dir, req.filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
     norm_path = os.path.normpath(file_path)
@@ -220,8 +230,9 @@ def handle_open_folder(req: FileActionRequest):
 @app.post("/api/delete")
 def handle_delete_file(req: FileActionRequest):
     _validate_filename(req.filename)
+    _validate_repo_id(req.repo_id)
     try:
-        delete_local_file(req.filename, get_models_dir())
+        delete_local_file(req.repo_id, req.filename, get_models_dir())
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {"message": f"Deleted {req.filename}"}
@@ -230,7 +241,8 @@ def handle_delete_file(req: FileActionRequest):
 def handle_dismiss_download(req: FileActionRequest):
     """Remove a stale canceled/errored entry from the downloads list."""
     _validate_filename(req.filename)
-    dismiss_download(req.filename)
+    _validate_repo_id(req.repo_id)
+    dismiss_download(req.repo_id, req.filename)
     return {"message": f"Dismissed {req.filename}"}
 
 class ConfigRequest(BaseModel):

@@ -125,11 +125,15 @@ async def list_local_models():
     models_dir = get_models_dir()
     models = []
     if os.path.isdir(models_dir):
-        for filepath in glob.glob(os.path.join(models_dir, "*.gguf")):
-            filename = os.path.basename(filepath)
+        for filepath in glob.glob(os.path.join(models_dir, "**", "*.gguf"), recursive=True):
+            rel_path = os.path.relpath(filepath, models_dir)
+            parts = rel_path.replace('\\', '/').split('/')
+            filename = parts[-1]
+            repo_id = "/".join(parts[:-1]) if len(parts) > 1 else "local"
+            composite_key = f"{repo_id}/{filename}"
             size_mb = round(os.path.getsize(filepath) / (1024 * 1024), 1)
             models.append({
-                "filename": filename,
+                "filename": composite_key,
                 "path": filepath,
                 "size_mb": size_mb,
             })

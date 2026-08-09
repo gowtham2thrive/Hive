@@ -234,10 +234,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- WebSockets (Progress) ---
+    let dlReconnectAttempts = 0;
     function connectWebSocket() {
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
         const wsUrl = `${protocol}//${window.location.host}/ws/progress`;
         const ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => { dlReconnectAttempts = 0; };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -246,7 +249,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ws.onclose = () => {
             console.log("WebSocket closed, reconnecting...");
-            setTimeout(connectWebSocket, 3000);
+            const delay = Math.min(1000 * Math.pow(2, dlReconnectAttempts), 10000);
+            dlReconnectAttempts++;
+            setTimeout(connectWebSocket, delay);
         };
         
         ws.onerror = (err) => {
@@ -255,24 +260,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Cancel / Pause / Resume Download ---
-    window.cancelDownload = async function(filename) {
+    window.cancelDownload = async function(filename, repoId) {
         try {
             await fetch("/api/cancel", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename, repo_id: repoId })
             });
         } catch (err) {
             console.error("Failed to cancel download:", err);
         }
     };
 
-    window.pauseDownload = async function(filename) {
+    window.pauseDownload = async function(filename, repoId) {
         try {
             await fetch("/api/pause", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename, repo_id: repoId })
             });
         } catch (err) {
             console.error("Failed to pause download:", err);
@@ -294,42 +299,46 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    window.openFolder = async function(filename) {
+    window.openFolder = async function(filename, repoId) {
         try {
             await fetch("/api/open_folder", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename, repo_id: repoId })
             });
         } catch (err) {
             console.error("Failed to open folder:", err);
         }
     };
 
-    window.deleteFile = async function(filename) {
+    window.deleteFile = async function(filename, repoId, btn) {
         if(!confirm(`Are you sure you want to delete ${filename}?`)) return;
+        if (btn) btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;display:inline-block"></div>';
         try {
-            await fetch("/api/delete", {
+            const res = await fetch("/api/delete", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename, repo_id: repoId })
             });
-            // Immediately remove it from the UI so we don't wait for websocket
-            const card = document.querySelector(`.download-card[data-filename="${CSS.escape(filename)}"]`);
+            if (!res.ok) throw new Error("Failed to delete");
+            const card = document.querySelector(`.download-card[data-filename="${CSS.escape(filename)}"][data-repo="${CSS.escape(repoId)}"]`);
             if (card) card.remove();
         } catch (err) {
             console.error("Failed to delete file:", err);
+            if (btn) btn.innerHTML = '<i data-feather="trash-2"></i>';
+            feather.replace();
+            alert("Failed to delete file");
         }
     };
 
-    window.dismissFile = async function(filename) {
+    window.dismissFile = async function(filename, repoId) {
         try {
             await fetch("/api/dismiss", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename, repo_id: repoId })
             });
-            const card = document.querySelector(`.download-card[data-filename="${CSS.escape(filename)}"]`);
+            const card = document.querySelector(`.download-card[data-filename="${CSS.escape(filename)}"][data-repo="${CSS.escape(repoId)}"]`);
             if (card) card.remove();
         } catch (err) {
             console.error("Failed to dismiss file:", err);
@@ -337,10 +346,15 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Bug 1: Build download cards using safe DOM construction instead of innerHTML
-    function createDownloadCard(filename, info) {
+    function createDownloadCard(compositeKey, info) {
+        const filename = compositeKey.split('/').pop();
+        const repoId = info.repo_id;
+        
         const card = document.createElement("div");
         card.className = "download-card";
         card.dataset.filename = filename;
+        card.dataset.repo = repoId;
+        card.dataset.composite = compositeKey;
 
         // Header
         const header = document.createElement("div");
@@ -349,6 +363,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const fnameSpan = document.createElement("span");
         fnameSpan.className = "download-filename";
         fnameSpan.textContent = filename; // Safe: textContent, not innerHTML
+
+        const repoSpan = document.createElement("span");
+        repoSpan.className = "download-repo";
+        repoSpan.style.fontSize = "0.75rem";
+        repoSpan.style.color = "var(--text-tertiary)";
+        repoSpan.style.marginLeft = "8px";
+        repoSpan.textContent = repoId;
+
+        fnameSpan.appendChild(repoSpan);
 
         const actions = document.createElement("div");
         actions.className = "download-actions";
@@ -359,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
         folderBtn.title = "Show in Folder";
         folderBtn.style.display = "none";
         folderBtn.innerHTML = '<i data-feather="folder"></i>';
-        folderBtn.addEventListener("click", () => openFolder(filename));
+        folderBtn.addEventListener("click", () => openFolder(filename, repoId));
 
         // Resume button
         const resumeBtn = document.createElement("button");
@@ -367,21 +390,21 @@ document.addEventListener("DOMContentLoaded", () => {
         resumeBtn.title = "Resume Download";
         resumeBtn.style.display = "none";
         resumeBtn.innerHTML = '<i data-feather="play"></i>';
-        resumeBtn.addEventListener("click", () => resumeDownload(filename, info.repo_id));
+        resumeBtn.addEventListener("click", () => resumeDownload(filename, repoId));
 
         // Pause button
         const pauseBtn = document.createElement("button");
         pauseBtn.className = "action-btn pause-btn";
         pauseBtn.title = "Pause Download";
         pauseBtn.innerHTML = '<i data-feather="pause"></i>';
-        pauseBtn.addEventListener("click", () => pauseDownload(filename));
+        pauseBtn.addEventListener("click", () => pauseDownload(filename, repoId));
 
         // Cancel button
         const cancelBtn = document.createElement("button");
         cancelBtn.className = "action-btn cancel-btn";
         cancelBtn.title = "Cancel Download";
         cancelBtn.innerHTML = '<i data-feather="x"></i>';
-        cancelBtn.addEventListener("click", () => cancelDownload(filename));
+        cancelBtn.addEventListener("click", () => cancelDownload(filename, repoId));
 
         // Delete button
         const deleteBtn = document.createElement("button");
@@ -389,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteBtn.title = "Delete File";
         deleteBtn.style.display = "none";
         deleteBtn.innerHTML = '<i data-feather="trash-2"></i>';
-        deleteBtn.addEventListener("click", () => deleteFile(filename));
+        deleteBtn.addEventListener("click", function() { deleteFile(filename, repoId, this) });
 
         // Dismiss button
         const dismissBtn = document.createElement("button");
@@ -397,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dismissBtn.title = "Dismiss";
         dismissBtn.style.display = "none";
         dismissBtn.innerHTML = '<i data-feather="x-circle"></i>';
-        dismissBtn.addEventListener("click", () => dismissFile(filename));
+        dismissBtn.addEventListener("click", () => dismissFile(filename, repoId));
 
         actions.appendChild(folderBtn);
         actions.appendChild(resumeBtn);
@@ -443,9 +466,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateDownloadsUI(activeDownloads) {
-        const filenames = Object.keys(activeDownloads);
+        const compositeKeys = Object.keys(activeDownloads);
         
-        if (filenames.length === 0) {
+        if (compositeKeys.length === 0) {
             downloadsContainer.innerHTML = "<div class='empty-downloads'>No local models or active downloads.</div>";
             downloadBadge.classList.add("hidden");
             return;
@@ -453,8 +476,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Calculate badge count (active downloads)
         let activeCount = 0;
-        filenames.forEach(filename => {
-            const status = activeDownloads[filename].status;
+        compositeKeys.forEach(compositeKey => {
+            const status = activeDownloads[compositeKey].status;
             if (status === "downloading" || status === "starting" || status === "paused") {
                 activeCount++;
             }
@@ -474,22 +497,20 @@ document.addEventListener("DOMContentLoaded", () => {
             downloadsContainer.innerHTML = "";
         }
         
-        // Remove stale cards
-        currentElements.forEach(card => {
-            if (card.classList.contains("empty-downloads")) return;
-            const fname = card.dataset.filename;
-            if (!activeDownloads[fname]) {
-                card.remove();
+        currentElements.forEach(el => {
+            if (el.classList.contains("empty-downloads")) return;
+            const key = el.dataset.composite;
+            if (key && !activeDownloads[key]) {
+                el.remove();
             }
         });
 
-        filenames.forEach(filename => {
-            const info = activeDownloads[filename];
-            let card = downloadsContainer.querySelector(`[data-filename="${CSS.escape(filename)}"]`);
-            
+        // Add or update
+        for (const [compositeKey, info] of Object.entries(activeDownloads)) {
+            let card = downloadsContainer.querySelector(`.download-card[data-composite="${CSS.escape(compositeKey)}"]`);
             if (!card) {
-                card = createDownloadCard(filename, info);
-                downloadsContainer.appendChild(card);
+                card = createDownloadCard(compositeKey, info);
+                downloadsContainer.prepend(card);
                 feather.replace(); // render new icons
             }
 
@@ -560,7 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 completedEl.textContent = formatBytes(info.completed);
                 totalEl.textContent = formatBytes(info.total);
             }
-        });
+        }
     }
 
     // --- Helpers ---
