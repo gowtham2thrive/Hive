@@ -281,12 +281,11 @@ def choose_directory():
         result = subprocess.check_output([sys.executable, "-c", script], text=True, timeout=120).strip()
         if result:
             return {"directory": result}
-        else:
-            return {"directory": ""}
-    except subprocess.TimeoutExpired:
-        raise HTTPException(status_code=408, detail="Directory chooser timed out")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {"directory": ""}
+    except subprocess.TimeoutExpired as exc:
+        raise HTTPException(status_code=408, detail="Directory chooser timed out") from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 @app.websocket("/ws/progress")
 async def websocket_endpoint(websocket: WebSocket):
@@ -298,7 +297,7 @@ async def websocket_endpoint(websocket: WebSocket):
             await asyncio.sleep(1) # send updates every second
     except WebSocketDisconnect:
         print("Client disconnected")
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"WebSocket error: {e}")
 
 # Register chat routes (conversations, model management, WebSocket chat)

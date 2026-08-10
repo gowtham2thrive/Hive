@@ -206,7 +206,7 @@ def delete_local_file(repo_id: str, filename: str, models_dir: str):
 def dismiss_download(repo_id: str, filename: str):
     composite_key = f"{repo_id}/{filename}"
     with _lock:
-        if composite_key in active_downloads and active_downloads[composite_key]["status"] in ["canceled", "error"]:
-            del active_downloads[composite_key]
-        elif composite_key in active_downloads and active_downloads[composite_key]["status"].startswith("error"):
-            del active_downloads[composite_key]
+        if composite_key in active_downloads:
+            status = active_downloads[composite_key]["status"]
+            if status == "canceled" or status.startswith("error"):
+                del active_downloads[composite_key]

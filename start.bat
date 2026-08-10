@@ -228,7 +228,7 @@ if !errorlevel! neq 0 (
     :: Refresh PATH to pick up newly installed tools
     for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v Path 2^>nul') do set "USER_PATH=%%b"
     for /f "tokens=2*" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul') do set "SYS_PATH=%%b"
-    set "PATH=!SYS_PATH!;!USER_PATH!"
+    set "PATH=!SYS_PATH!;!USER_PATH!;!PATH!"
 )
 echo.
 echo   [*] Building llama-cpp-python with Vulkan support...
