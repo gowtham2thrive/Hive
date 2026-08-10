@@ -137,7 +137,7 @@ If you update your drivers or install a new toolkit, you can trigger a re-detect
 
 <div align="center">
   <!-- CONTRIBUTORS_START -->
-<a href="https://github.com/gowtham2thrive"><img src="assets/contributor-gowtham2thrive.svg" width="390" /></a><a href="https://github.com/YallaDurgaPrasad65"><img src="assets/contributor-YallaDurgaPrasad65.svg" width="390" /></a><a href="https://github.com/preethi-beri"><img src="assets/contributor-preethi-beri.svg" width="390" /></a>
+<a href="https://github.com/gowtham2thrive"><img src="assets/contributor-gowtham2thrive.svg" width="390" /></a><a href="https://github.com/YallaDurgaPrasad65"><img src="assets/contributor-YallaDurgaPrasad65.svg" width="390" /></a><a href="https://github.com/preethi-beri"><img src="assets/contributor-preethi-beri.svg" width="390" /></a><a href="https://github.com/SubhashiniRanga2K5"><img src="assets/contributor-SubhashiniRanga2K5.svg" width="390" /></a>
 
 <!-- CONTRIBUTORS_END -->
 </div>
